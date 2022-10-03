@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import conn from './db.js';
+import page_route from './routes/page_route.js';
+import photo_route from './routes/photo_route.js';
 
 dotenv.config();
 
@@ -16,13 +18,9 @@ app.set('view engine', 'ejs');
 //static files middleware
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-    res.render('index');
-});
-
-app.get('/about', (req, res) => {
-    res.render('about');
-});
+//routes
+app.use('/', page_route);
+app.use('/photos', photo_route);
 
 app.listen(port, () => {
     console.log("Application listening on port: " + port);
