@@ -1,9 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import conn from './db.js';
+import cookie_parser from 'cookie-parser';
 import page_route from './routes/page_route.js';
 import photo_route from './routes/photo_route.js';
 import user_route from './routes/user_route.js';
+import { checkUser } from './middlewares/auth_middleware.js'
 
 dotenv.config();
 
@@ -20,8 +22,10 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.json()); // girilen değerlerde json çıktı verilmesi için kullanılan middleware.
 app.use(express.urlencoded({ extended: true })); // alınan verilerin post işlemi ile db'ye aktarılması için kullanılan middleware.
+app.use(cookie_parser());
 
 //routes
+app.get("*", checkUser); // tüm get komutlarında bunu uygula.. kullanıcı login olmuş mu?
 app.use('/', page_route);
 app.use('/photos', photo_route);
 app.use('/users', user_route);

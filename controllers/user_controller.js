@@ -1,13 +1,11 @@
 import User from "../models/user_model.js";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const createUser = async (req, res) => {
     try {
         const user = await User.create(req.body);
-        res.status(201).json({
-            succeded: true,
-            user
-        });
+        res.redirect('/login');
     } catch (err) {
         res.status(500).json({
             succeded: false,
@@ -30,13 +28,20 @@ const loginUser = async (req, res) => {
             return res.status(401).json({
                 succeded: false,
                 error: "There is  no such user"
-            });
-            //eğer böyle bir kullanıcı yoksa alttaki if komutuna girmeden program buradaki hata mesajını döndürür.
+            }); //eğer böyle bir kullanıcı yoksa alttaki if komutuna girmeden program buradaki hata mesajını döndürür.
         }
 
 
         if (passwordIsTrue) {
-            res.status(200).send("You are logged in successfully!!");
+
+            const token = createToken(user._id);
+            res.cookie("jwt", token, {
+                httpOnly: true,
+                maxAge: 1000 * 60 * 60 * 24,
+            });
+
+            res.redirect('/users/dashboard');
+
         } else {
             res.status(401).json({
                 succeded: false,
@@ -51,4 +56,18 @@ const loginUser = async (req, res) => {
     }
 };
 
-export { createUser, loginUser };
+// JWT Validation Using
+const createToken = (userId) => {
+    return jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
+        expiresIn: "1d"
+    });
+}
+
+
+const getDashboardPage = (req, res) => {
+    res.render('dashboard', {
+        link: "dasboard",
+    });
+}
+
+export { createUser, loginUser, getDashboardPage };

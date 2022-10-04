@@ -10,6 +10,8 @@
 <li>EJS</li>
 <li>Dotenv</li>
 <li>Bcrypt</li>
+<li>Json Web Token</li>
+<li>Cookie Parser</li>
 </ul>
 
 
