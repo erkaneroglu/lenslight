@@ -9,6 +9,7 @@
 <li>MongoDB/mongoose</li>
 <li>EJS</li>
 <li>Dotenv</li>
+<li>Bcrypt</li>
 </ul>
 
 
